@@ -5,3 +5,45 @@ a.logo {
 
 .btn {
 }
+
+.row {
+  display: flex;
+}
+
+.panel {
+  & > .inner {
+  }
+}
+.side-menu {
+  $sideMenuBorderColor:#333;
+  li {
+    background-color:#fff;
+    cursor: pointer;
+    padding:1rem;
+    .icon {
+      margin-right: 1rem;
+    }
+  }
+  li:hover {
+    background-color:#f7f7f7;
+  }
+  li.current {
+  }
+}
+
+
+// file list
+ul.files-list {
+  li {
+    background-color:#fff;
+    border-top:1px solid darken($bg, 5%);
+    cursor: pointer;
+    padding: 1rem;
+  }
+  li.selected {
+    background-color:#f5f5f5;
+  }
+  li:last-child {
+    border-bottom:1px solid darken($bg, 5%);
+  }
+}

@@ -1,0 +1,16 @@
+#left {
+  flex:0 1 250px;
+  margin-right: 1rem;
+}
+#center {
+  border-right:1px solid #eee;
+  border-left:1px solid #eee;
+  flex:0 1 750px;
+  margin-right: 1rem;
+}
+#right {
+  background-color: #fff;
+  box-shadow: 0 0 4px -1px #555;
+  flex:1;
+  height:100vh;
+}
