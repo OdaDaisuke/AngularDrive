@@ -80,19 +80,22 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 
 
 	//選択中のアイテムのファイルタイプを判定。あとで外部関数にする
-	var showFilesEXT = {
+	var files_ext = {
 		image : ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp'],
 		video : ['.mov', '.mp4', '.avi', '.mpeg'],
 		sound : ['.mp3', '.wav', '.m4a', '.wma'],
-		adobe : ['.ai', '.art', '.psd', '.ae', '.xd']
+		adobe : ['.ai', '.art', '.psd', '.ae', '.xd'],
+		win_office : ['.xls'],
+		general : ['.txt', '.json', '.yml'],
+		program : ['.php', '.rb', '.py', '.js', '.html', '.css', '.scss', '.htm']
 	};
 	function is_filetype(filename, filetype) {
-		if(showFilesEXT[filetype] == undefined) {
+		if(files_ext[filetype] == undefined) {
 			console.error('file type undefined : ' + filetype);
 			return false;
 		}
-		for (var i = 0; i < showFilesEXT[filetype].length; i++) {
-			if(filename.indexOf(showFilesEXT[filetype][i]) != -1)
+		for (var i = 0; i < files_ext[filetype].length; i++) {
+			if(filename.indexOf(files_ext[filetype][i]) != -1)
 				return true;
 		}
 		return false;
@@ -101,8 +104,9 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 	//アイテムをモーダル表示
 	$scope.showItem = function($index) {
 
-		// zipファイルじゃなかったら普通新規タブで表示
-		if(is_image($scope.currentFile.filename) || is_video($scope.currentFile.filename)) {
+		var filename = $scope.currentFile.filename;
+
+		if(is_filetype(filename, 'image') || is_filetype(filename, 'video')) {
 			$modal.open({
 				templateUrl : 'modalContentForm',
 				controller : 'ModalInstance',
