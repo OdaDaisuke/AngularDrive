@@ -36,8 +36,10 @@ a.logo {
 ul.files-list {
   li {
     background-color:#fff;
-    border-top:1px solid darken($bg, 5%);
+    border-top:1px solid darken($bg, 2%);
+    color:#444;
     cursor: pointer;
+    // font-weight: bold;
     padding: 1rem;
   }
   li.selected {
@@ -45,5 +47,44 @@ ul.files-list {
   }
   li:last-child {
     border-bottom:1px solid darken($bg, 5%);
+  }
+}
+
+// modal
+.modal-dialog {
+  display: flex;
+  height:100vh;
+  left:0;
+  position: fixed;
+  top:0;
+  width:100vw;
+  z-index:10;
+  .modal-header {
+    background-color: rgba(0,0,0,0.5);
+    height:35px;
+    width:100vw;
+  }
+  .modal-body {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top:10px;
+    padding-bottom: 10px;
+    position: relative;
+    z-index:20;
+    img {
+      max-height: 90vh;
+      max-width: 90vw;
+      z-index:30;
+    }
+  }
+  .modal-overlay {
+    background-color:rgba(0,0,0,0.8);
+    height:100vh;
+    left:0;
+    position: fixed;
+    top:0;
+    width:100vw;
+    z-index:25;
   }
 }
