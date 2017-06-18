@@ -50,7 +50,7 @@
           </ul>
         </div>
         <div class="p-a">
-          <p class="text--help">45.4MB used.</p>
+          <p class="text--help"><span ng-model="fileSizeSum"></span> used.</p>
         </div>
       </div>
     </section>

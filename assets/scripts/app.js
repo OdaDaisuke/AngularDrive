@@ -32,6 +32,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.selected = []; //選択されたファイル群のインデックスが入る
 	$scope.is_modal_open = false; //モーダルが開いてるか
 	$scope.currentItemIndex; //ファイルのインデックス
+	$scope.fileSizeSum; //合計ファイルサイズ
 
 	//現在選択中のファイルの情報が入る
 	$scope.currentFile = {
@@ -51,13 +52,14 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 				dataType : 'list'
 			}
 		})
-		.then(function(res) {
-			if(typeof res.data == 'object') {
-				$scope.items = res.data;
+		.success(function(res, status, headers, config) {
+			if(res.length >= 0) {
+				$scope.items = res;
 			} else {
 				$scope.items = {};
 			}
-		},function(res) {
+		})
+		.error(function(res) {
 			console.error(res);
 		});
 	})();
@@ -94,7 +96,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 		// post
 		$http.post(url.upload, fd, {
 			transformRequest : null,
-			headers : { 'Content-type' : undefined}
+			headers : { 'Content-type' : undefined }
 		})
 		.success(function(res) {
 			$scope.response = res;
@@ -177,7 +179,6 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 				is_filetype(filename, 'adobe')))
 		};
 		$scope.currentFile = currentFileInfo;
-		console.log($scope.currentFile);
 	}
 
 	$scope.moldFileSize = function(filesize) {
