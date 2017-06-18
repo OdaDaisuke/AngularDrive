@@ -12,10 +12,11 @@ const path = {
 }
 
 gulp.task('server', () => {
-  browser({
+  browser.init({
     server : {
       baseDir : "./"
-    }
+    },
+    files : ['./*']
   })
 })
 

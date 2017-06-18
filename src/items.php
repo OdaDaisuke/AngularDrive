@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'functions.php';
+require_once 'DB.php';
 
 function getItems($type, $filename) {
   switch(strtolower($type)) {
@@ -19,14 +20,16 @@ function getItems($type, $filename) {
       break;
 
     case 'list' :
-      // ファイル一覧を取得
-      $files = array();
-      $handle = opendir('../storage');
-      while(($file = readdir($handle)) != false) {
-        if($file == '.' || $file == '..') continue;
-        array_push($files, $file);
+      DB::init();
+      $q = 'SELECT * FROM item LIMIT 20';
+      $result = array();
+
+      foreach (DB::query($q) as $file) {
+        array_push($result, $file);
       }
-      return $files;
+
+      return $result;
+      break;
 
     default :
       return array($type);

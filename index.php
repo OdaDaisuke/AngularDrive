@@ -1,5 +1,4 @@
 <?php
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -65,9 +64,9 @@
         <div class="">
           <h2 class="green p-a text-white">Storage</h2>
           <ul class="files-list">
-            <li ng-repeat="item in items.data" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)" ng-model="itemLI">
+            <li ng-repeat="item in items" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)" ng-model="itemLI">
               <div class="flex-6">
-                {{item}}
+                {{item.filename}}
                 <i class="ion-trash-a" ng-model="deleteBtn" ng-click="deleteItem($index)"></i>
               </div>
               <div class="flex-3">
@@ -79,34 +78,56 @@
         </div>
       </div>
     </section>
-    <section id="right" class="panel">
-      <div class="inner p-a">
-        <h3>ファイル詳細</h3>
-        <p>{{currentFile.filename}}</p>
-        <p>Size : {{currentFile.size}}</p>
-        <p>Created : {{currentFile.size}}</p>
-        <p>Modified : {{currentFile.size}}</p>
-        <p>File Type :
-          <span ng-show="currentFile.is_image">Image</span>
-          <span ng-show="currentFile.is_video">Video</span>
-          <span ng-show="currentFile.is_adobe">Adobe</span>
-          <span ng-show="currentFile.is_unknown">unknown</span>
-        </p>
+    <section id="right" class="file-detail">
+      <div class="inner">
+        <div class="p-lg">
+          <h4 class="file-name">{{currentFile.filename}}</h4>
+        </div>
+        <div class="p-r-a p-l-a">
+          <img ng-show="currentFile.is_image" ng-src="{{currentFile.src}}">
+        </div>
+        <div class="p-lg">
+          <table class="file-detail-table">
+            <tr>
+              <th>サイズ<th>
+              <td>{{currentFile.size}}</td>
+            </tr>
+            <tr>
+              <th>作成日<th>
+              <td>{{currentFile.created}}</td>
+            </tr>
+            <tr>
+              <th>更新日<th>
+              <td>{{currentFile.modified}}</td>
+            </tr>
+            <tr>
+              <th>タイプ<th>
+              <td>
+                <span ng-show="currentFile.is_image">Image</span>
+                <span ng-show="currentFile.is_video">Video</span>
+                <span ng-show="currentFile.is_adobe">Adobe</span>
+                <span ng-show="currentFile.is_unknown">unknown</span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </section>
   </div>
-  <script type="text/ng-template" id="modalContentForm" class="modal-wrap">
+  <div id="modalContentDivForm" class="modal-wrap" ng-class="{visible : is_modal_open}">
     <div id="modalContent" class="inner">
-      <div class="modal-header">
-        <h3>{{currentFile.filename}}</h3>
+      <div class="modal-header text-center">
+        <h3 class="modal-title text-white">{{currentFile.filename}}</h3>
       </div>
       <div class="modal-body">
-        <img ng-show="currentFile.is_image" ng-src="{{currentFile.src}}">
+        <div class="modal-content">
+          <img ng-show="currentFile.is_image" ng-src="{{currentFile.src}}">
+        </div>
         <div class="modal-overlay" ng-click="closeModal()"></div>
       </div>
       <div class="modal-footer">
       </div>
     </div>
-  </script>
+  </div>
 </body>
 </html>

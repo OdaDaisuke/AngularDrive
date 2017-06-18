@@ -26,9 +26,12 @@ app.config(function ($httpProvider) {
 
 });
 
-app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal, $http) {
-	$scope.file = '';
-	$scope.selected = [];
+app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+	$scope.items; // ファイル群の情報
+	$scope.file = ''; // <input type="file">のモデル
+	$scope.selected = []; //選択されたファイル群のインデックスが入る
+	$scope.is_modal_open = false; //モーダルが開いてるか
+	$scope.currentItemIndex; //ファイルのインデックス
 
 	//現在選択中のファイルの情報が入る
 	$scope.currentFile = {
@@ -49,10 +52,36 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 			}
 		})
 		.then(function(res) {
-			$scope.items = res;
+			if(typeof res.data == 'object') {
+				$scope.items = res.data;
+			} else {
+				$scope.items = {};
+			}
 		},function(res) {
 			console.error(res);
 		});
+	})();
+
+	// モーダル操作
+	(function() {
+		document.onkeydown = function(e) {
+			if($scope.is_modal_open) {
+				switch(e.code) {
+					case 'ArrowLeft':
+						if($scope.currentItemIndex -1 >= 0) {
+							$scope.currentItemIndex--;
+							$scope.selectItem($scope.currentItemIndex);
+						}
+						break;
+					case 'ArrowRight' :
+						if($scope.currentItemIndex + 2 <= $scope.items.length) {
+							$scope.currentItemIndex++;
+							$scope.selectItem($scope.currentItemIndex);
+						}
+						break;
+				}
+			}
+		}
 	})();
 
 	//ファイルアップロード
@@ -69,7 +98,7 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 			$scope.response = res;
 
 			if(typeof res.file.error != undefined && res.file.error == 0) {
-				$scope.items.data.push([res.file.name]);
+				$scope.items.push([res.file.name]);
 			}
 
 		})
@@ -78,10 +107,9 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 		});
 	}
 
-
 	//選択中のアイテムのファイルタイプを判定。あとで外部関数にする
 	var files_ext = {
-		image : ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp'],
+		image : ['.jpg', '.JPG', '.png', '.jpeg', '.gif', '.svg', '.bmp'],
 		video : ['.mov', '.mp4', '.avi', '.mpeg'],
 		sound : ['.mp3', '.wav', '.m4a', '.wma'],
 		adobe : ['.ai', '.art', '.psd', '.ae', '.xd'],
@@ -107,22 +135,21 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 		var filename = $scope.currentFile.filename;
 
 		if(is_filetype(filename, 'image') || is_filetype(filename, 'video')) {
-			$modal.open({
-				templateUrl : 'modalContentForm',
-				controller : 'ModalInstance',
-				scope: $scope
-			});
-
-			file_showable = false;
-
+			$scope.is_modal_open = true;
 		} else {
 			alert('Cant preview the file:' + $scope.currentFile.filename);
 		}
 
 	}
 
+	$scope.closeModal = function() {
+		$scope.is_modal_open = false;
+	}
+
 	// クリックでアイテムを選択状態にする
 	$scope.selectItem = function($index) {
+		var currentItem = $scope.items[$index];
+		$scope.currentItemIndex = $index;
 		if($scope.selected[$index]) {
 			$scope.selected[$index] = false;
 		} else {
@@ -131,11 +158,23 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 			}
 			$scope.selected[$index] = true;
 		}
-		var filename = $scope.items.data[$index]
+		var filename = currentItem.filename;
+		var filesize = currentItem.size;
+		console.log(filesize);
+		if (filesize < 1000) {
+			filesize += 'Byte';
+		} else if(filesize >= 1000 * 1000) {
+			// MB
+			filesize = (filesize / (1000 * 1000)) + 'MB';
+		} else {
+			filesize = filesize + 'GB';
+		}
 		var currentFileInfo = {
 			filename : filename,
-			src : path.storage + $scope.items.data[$index],
-			size : 0,
+			src : path.storage + $scope.items[$index].filename,
+			size : filesize,
+			created : $scope.items[$index].created,
+			modified : $scope.items[$index].modified,
 			is_image : (is_filetype(filename, 'image')),
 			is_vide : (is_filetype(filename, 'video')),
 			is_adobe : (is_filetype(filename, 'adobe')),
@@ -143,13 +182,13 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 				is_filetype(filename, 'video') ||
 				is_filetype(filename, 'adobe')))
 		};
-
 		$scope.currentFile = currentFileInfo;
+		console.log($scope.currentFile);
 	}
 
 	$scope.deleteItem = function($index) {
-		if(confirm($scope.items.data[$index] + 'を削除しますか？')) {
-			var target = $scope.items.data[$index];
+		if(confirm($scope.items[$index] + 'を削除しますか？')) {
+			var target = $scope.items[$index];
 			$http({
 				method : 'POST',
 				url : url.items,
@@ -160,7 +199,7 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 			})
 			.then(function(res) {
 				if(res.data.indexOf('OK') != -1) {
-					$scope.items.data.splice($index, 1);
+					$scope.items.splice($index, 1);
 				}
 			},function(res) {
 				console.error(res);
@@ -169,12 +208,6 @@ app.controller('MainCtrl', ['$scope', '$modal', '$http', function($scope, $modal
 
 	}
 
-}]);
-
-app.controller('ModalInstance', ['$scope', '$modalInstance', function($scope, $modalInstance) {
-	$scope.closeModal = function() {
-		$modalInstance.close();
-	}
 }]);
 
 app.directive('fileModel', function($parse) {

@@ -6,9 +6,9 @@ require_once 'DB.php';
 $uploadfile = UPLOAD_DIR . basename($_FILES['file']['name']);
 
 if(move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-  $db = DB::init();
+  $pdo = DB::init();
   $q = 'INSERT INTO item (filename, size) VALUES(:filename, :filesize)';
-  $stmt = $db->prepare($q);
+  $stmt = $pdo->prepare($q);
   $stmt->execute(array(
     'filename' => $_FILES['file']['name'],
     'filesize' => $_FILES['file']['size']
