@@ -62,19 +62,25 @@
           <button class="btn" ng-click="fileSubmit()">アップロード</button>
         </div>
         <div class="">
-          <h2 class="green p-a text-white">Storage</h2>
-          <ul class="files-list">
-            <li ng-repeat="item in items" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)" ng-model="itemLI">
-              <div class="flex-6">
-                {{item.filename}}
+          <table class="files-list">
+            <tr class="item flex transparent">
+              <th class="flex-6">ファイル名</th>
+              <th class="flex-3">作成日</th>
+              <th class="flex-3">サイズ</th>
+            </tr>
+            <tr ng-repeat="item in items" class="item flex" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)" ng-model="itemLI">
+              <th class="flex-6">
+                <span class="m-r-a">{{item.filename}}</span>
                 <i class="ion-trash-a" ng-model="deleteBtn" ng-click="deleteItem($index)"></i>
-              </div>
-              <div class="flex-3">
-              </div>
-              <div class="flex-3">
-              </div>
-            </li>
-          </ul>
+              </th>
+              <td class="flex-3">
+                {{item.created}}
+              </td>
+              <td class="flex-3">
+                {{moldFileSize(item.size)}}
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </section>

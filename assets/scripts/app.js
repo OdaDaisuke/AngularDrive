@@ -84,6 +84,8 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 		}
 	})();
 
+	//上下キーでアイテムの選択カーソル移動
+
 	//ファイルアップロード
 	$scope.fileSubmit = function() {
 		var fd = new FormData();
@@ -146,7 +148,7 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 		$scope.is_modal_open = false;
 	}
 
-	// クリックでアイテムを選択状態にする
+	// クリックでアイテムを選択トグルする
 	$scope.selectItem = function($index) {
 		var currentItem = $scope.items[$index];
 		$scope.currentItemIndex = $index;
@@ -159,16 +161,8 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 			$scope.selected[$index] = true;
 		}
 		var filename = currentItem.filename;
-		var filesize = currentItem.size;
-		console.log(filesize);
-		if (filesize < 1000) {
-			filesize += 'Byte';
-		} else if(filesize >= 1000 * 1000) {
-			// MB
-			filesize = (filesize / (1000 * 1000)) + 'MB';
-		} else {
-			filesize = filesize + 'GB';
-		}
+		var filesize = $scope.moldFileSize(currentItem.size);
+
 		var currentFileInfo = {
 			filename : filename,
 			src : path.storage + $scope.items[$index].filename,
@@ -184,6 +178,18 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 		};
 		$scope.currentFile = currentFileInfo;
 		console.log($scope.currentFile);
+	}
+
+	$scope.moldFileSize = function(filesize) {
+		if (filesize < 1000) {
+			filesize += 'Byte';
+		} else if(filesize >= 1000 * 1000) {
+			// MB
+			filesize = (filesize / (1000 * 1000)) + 'MB';
+		} else {
+			filesize = filesize + 'GB';
+		}
+		return filesize;
 	}
 
 	$scope.deleteItem = function($index) {

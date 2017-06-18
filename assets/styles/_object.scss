@@ -33,19 +33,35 @@ a.logo {
 
 
 // file list
-ul.files-list {
-  li {
+.files-list {
+  width:100%;
+  .item:not(:first-child) {
     background-color:#fff;
     border-top:1px solid darken($bg, 2%);
-    color:#444;
     cursor: pointer;
-    // font-weight: bold;
-    padding: 1rem;
   }
-  li.selected {
+  .item {
+    color:#444;
+    width:100%;
+    th,td {
+      display: flex;
+      flex-wrap: nowrap;
+      font-weight: lighter;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    th {
+      font-size: .9rem;
+    }
+    td {
+      color:#5f5f5f;
+      font-size: .8rem;
+    }
+  }
+  .item.selected {
     background-color:#f5f5f5;
   }
-  li:last-child {
+  .item:last-child {
     border-bottom:1px solid darken($bg, 5%);
   }
 }
