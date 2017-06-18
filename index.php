@@ -50,7 +50,7 @@
           </ul>
         </div>
         <div class="p-a">
-          <p class="text--help"><span ng-model="fileSizeSum"></span> used.</p>
+          <p class="text--help">{{moldFileSize(fileSizeSum)}} used.</p>
         </div>
       </div>
     </section>
@@ -68,7 +68,7 @@
               <th class="flex-3">作成日</th>
               <th class="flex-3">サイズ</th>
             </tr>
-            <tr ng-repeat="item in items" class="item flex" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)" ng-model="itemLI">
+            <tr ng-repeat="item in items" class="item flex" ng-class="{selected: selected[$index]}" ng-click="selectItem($index)" ng-dblclick="showItem($index)">
               <th class="flex-6">
                 <span class="m-r-a">{{item.filename}}</span>
                 <i class="ion-trash-a" ng-model="deleteBtn" ng-click="deleteItem($index)"></i>

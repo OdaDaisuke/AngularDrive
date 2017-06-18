@@ -19,6 +19,7 @@ function getItems($type, $filename) {
       return array('storage/' . $filename);
       break;
 
+    // ファイル一覧取得
     case 'list' :
       DB::init();
       $q = 'SELECT * FROM item LIMIT 20';
@@ -29,6 +30,18 @@ function getItems($type, $filename) {
       }
 
       return $result;
+      break;
+
+    // ファイルサイズ取得
+    case 'size' :
+      DB::init();
+      $q = 'SELECT SUM(size) FROM item';
+      $result = array();
+      foreach (DB::query($q) as $data) {
+        array_push($result, $data);
+      }
+      return $result;
+
       break;
 
     default :

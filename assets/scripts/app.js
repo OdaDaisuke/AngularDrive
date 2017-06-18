@@ -64,29 +64,46 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 		});
 	})();
 
-	// モーダル操作
+	// ストレージ占有サイズを取得
+	(function() {
+		$http({
+			method : 'POST',
+			url : url.items,
+			data : {
+				dataType : 'size'
+			}
+		})
+		.success(function(res, status, headers, config) {
+			$scope.fileSizeSum = res[0][0];
+		})
+		.error(function(res) {
+			console.error(res);
+		});
+	})();
+
+	// キーボード操作
 	(function() {
 		document.onkeydown = function(e) {
-			if($scope.is_modal_open) {
-				switch(e.code) {
-					case 'ArrowLeft':
-						if($scope.currentItemIndex -1 >= 0) {
-							$scope.currentItemIndex--;
-							$scope.selectItem($scope.currentItemIndex);
-						}
-						break;
-					case 'ArrowRight' :
-						if($scope.currentItemIndex + 2 <= $scope.items.length) {
-							$scope.currentItemIndex++;
-							$scope.selectItem($scope.currentItemIndex);
-						}
-						break;
-				}
+			// モーダル操作
+			switch(e.code) {
+				case 'ArrowUp':
+				case 'ArrowLeft':
+					if($scope.currentItemIndex -1 >= 0) {
+						$scope.currentItemIndex -= 1;
+						$scope.selectItem($scope.currentItemIndex);
+					}
+					break;
+				case 'ArrowDown':
+				case 'ArrowRight' :
+					if($scope.currentItemIndex + 2 <= $scope.items.length) {
+						$scope.currentItemIndex += 1;
+						$scope.selectItem($scope.currentItemIndex);
+					}
+					break;
 			}
 		}
 	})();
 
-	//上下キーでアイテムの選択カーソル移動
 
 	//ファイルアップロード
 	$scope.fileSubmit = function() {
