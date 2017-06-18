@@ -59,7 +59,11 @@ a.logo {
     }
   }
   .item.selected {
-    background-color:#f5f5f5;
+    background-color:#009688;
+    color:#fff;
+    td {
+      color:#fff;
+    }
   }
   .item:last-child {
     border-bottom:1px solid darken($bg, 5%);

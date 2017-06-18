@@ -25,8 +25,12 @@ class DB {
     return self::$pdo->query($q);
   }
 
+  static function prepare($q) {
+    return self::$pdo->prepare($q);
+  }
 
   static function close() {
     self::$pdo = null;
   }
+
 }

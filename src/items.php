@@ -4,6 +4,9 @@ require_once 'functions.php';
 require_once 'DB.php';
 
 function getItems($type, $filename) {
+  DB::init();
+  $result = array();
+
   switch(strtolower($type)) {
 
     //ファイルを消す
@@ -12,34 +15,34 @@ function getItems($type, $filename) {
       $filePath = '../storage/' . $filename;
 
       if(is_file($filePath)) {
+        $q = 'DELETE FROM item WHERE filename = :filename';
+        $stmt = DB::prepare($q);
+        $rs = $stmt->execute(array(
+          'filename' => $filename
+        ));
         unlink($filePath);
-        return array('OK');
+        return $rs;
       }
 
-      return array('storage/' . $filename);
+      return false;
       break;
 
     // ファイル一覧取得
     case 'list' :
-      DB::init();
       $q = 'SELECT * FROM item LIMIT 20';
-      $result = array();
 
-      foreach (DB::query($q) as $file) {
+      foreach (DB::query($q) as $file)
         array_push($result, $file);
-      }
 
       return $result;
       break;
 
     // ファイルサイズ取得
     case 'size' :
-      DB::init();
       $q = 'SELECT SUM(size) FROM item';
-      $result = array();
-      foreach (DB::query($q) as $data) {
+      foreach (DB::query($q) as $data)
         array_push($result, $data);
-      }
+
       return $result;
 
       break;

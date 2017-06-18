@@ -211,8 +211,8 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 	}
 
 	$scope.deleteItem = function($index) {
-		if(confirm($scope.items[$index] + 'を削除しますか？')) {
-			var target = $scope.items[$index];
+		if(confirm($scope.items[$index].filename + 'を削除しますか？')) {
+			var target = $scope.items[$index].filename;
 			$http({
 				method : 'POST',
 				url : url.items,
@@ -221,11 +221,13 @@ app.controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 					filename : target
 				}
 			})
-			.then(function(res) {
-				if(res.data.indexOf('OK') != -1) {
+			.success(function(res) {
+				console.log(res);
+				if(res.indexOf('true') != -1) {
 					$scope.items.splice($index, 1);
 				}
-			},function(res) {
+			})
+			.error(function(res) {
 				console.error(res);
 			});
 		}
